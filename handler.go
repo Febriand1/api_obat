@@ -100,6 +100,12 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
+	err = json.NewDecoder(r.Body).Decode(&obat)
+	if err != nil {
+		responseObat.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(responseObat)
+	}
+
 	responseObat.Status = true
 	responseObat.Message = "Insert Obat Success"
 	responseObat.Data = []Obat{obat}
@@ -120,6 +126,12 @@ func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		responseObat.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(responseObat)
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&obat)
+	if err != nil {
+		responseObat.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responseObat)
 	}
 
@@ -222,6 +234,12 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
+	err = json.NewDecoder(r.Body).Decode(&penyakit)
+	if err != nil {
+		responsePenyakit.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(responsePenyakit)
+	}
+
 	responsePenyakit.Status = true
 	responsePenyakit.Message = "Insert Penyakit Success"
 	responsePenyakit.Data = []Penyakit{penyakit}
@@ -242,6 +260,12 @@ func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		responsePenyakit.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(responsePenyakit)
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&penyakit)
+	if err != nil {
+		responsePenyakit.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responsePenyakit)
 	}
 
