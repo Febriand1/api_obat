@@ -94,7 +94,7 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responseObat.Status = false
 
-	_, _, err := InsertObat(mconn, collectionname, obat)
+	_, err := InsertObat(mconn, collectionname, obat)
 	if err != nil {
 		responseObat.Message = err.Error()
 		return GCFReturnStruct(responseObat)
@@ -228,7 +228,7 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responsePenyakit.Status = false
 
-	_, _, err := InsertPenyakit(mconn, collectionname, penyakit)
+	_, err := InsertPenyakit(mconn, collectionname, penyakit)
 	if err != nil {
 		responsePenyakit.Message = err.Error()
 		return GCFReturnStruct(responsePenyakit)

@@ -101,19 +101,23 @@ func GetObatByID(db *mongo.Database, col string, _id primitive.ObjectID) (obat O
 	return obat, nil
 }
 
-func InsertObat(db *mongo.Database, col string, obat Obat) (InsertedID primitive.ObjectID, status bool, err error) {
+func InsertObat(db *mongo.Database, col string, obat Obat) (InsertedID primitive.ObjectID, err error) {
+	objectID := primitive.NewObjectID()
+
 	dataobat := bson.D{
+		{Key: "_id", Value: objectID},
 		{Key: "jenis_obat", Value: obat.Jenis_Obat},
 		{Key: "nama_obat", Value: obat.Nama_Obat},
 		{Key: "deskripsi", Value: obat.Deskripsi},
 	}
 
-	_, err = InsertOneDoc(db, col, dataobat)
+	InsertedID, err = InsertOneDoc(db, col, dataobat)
 	if err != nil {
-		return InsertedID, false, err
+		fmt.Printf("InsertObat: %v\n", err)
+		return InsertedID, err
 	}
 
-	return InsertedID, true, nil
+	return InsertedID, nil
 }
 
 func UpdateObat(db *mongo.Database, col string, _id primitive.ObjectID, obat Obat) (status bool, err error) {
@@ -192,8 +196,11 @@ func GetPenyakitByID(db *mongo.Database, col string, _id primitive.ObjectID) (pe
 	return penyakit, nil
 }
 
-func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (InsertedID primitive.ObjectID, status bool, err error) {
+func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (InsertedID primitive.ObjectID, err error) {
+	objectID := primitive.NewObjectID()
+
 	datapenyakit := bson.D{
+		{Key: "_id", Value: objectID},
 		{Key: "jenis_penyakit", Value: penyakit.Jenis_Penyakit},
 		{Key: "nama_penyakit", Value: penyakit.Nama_Penyakit},
 		{Key: "deskripsi", Value: penyakit.Deskripsi},
@@ -202,12 +209,13 @@ func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (Inserted
 		}},
 	}
 
-	_, err = InsertOneDoc(db, col, datapenyakit)
+	InsertedID, err = InsertOneDoc(db, col, datapenyakit)
 	if err != nil {
-		return InsertedID, false, err
+		fmt.Printf("InsertPenyakit: %v\n", err)
+		return InsertedID, err
 	}
 
-	return InsertedID, true, nil
+	return InsertedID, nil
 }
 
 func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, penyakit Penyakit) (status bool, err error) {

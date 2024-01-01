@@ -74,8 +74,7 @@ func TestInsertObat(t *testing.T) {
 	data.Nama_Obat = "chlorpromazine"
 	data.Deskripsi = "Deskripsi Obat"
 
-	_, status, err := InsertObat(mconn, "obat", data)
-	fmt.Println("Status", status)
+	_, err := InsertObat(mconn, "obat", data)
 	if err != nil {
 		t.Errorf("Error inserting obat: %v", err)
 	} else {
@@ -165,8 +164,7 @@ func TestInsertPenyakit(t *testing.T) {
 	data.Deskripsi = "Deskripsi Penyakit"
 	data.Obat.Nama_Obat = "Chlorpromazine"
 
-	_, status, err := InsertPenyakit(mconn, "penyakit", data)
-	fmt.Println("Status", status)
+	_, err := InsertPenyakit(mconn, "penyakit", data)
 	if err != nil {
 		t.Errorf("Error inserting penyakit: %v", err)
 	} else {
