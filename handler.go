@@ -48,12 +48,6 @@ func HandlerGetAllObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responseObat.Status = false
 
-	err := json.NewDecoder(r.Body).Decode(&obat)
-	if err != nil {
-		responseObat.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(responseObat)
-	}
-
 	obats, err := GetAllObat(mconn, collectionname)
 	if err != nil {
 		responseObat.Message = err.Error()
@@ -80,12 +74,6 @@ func HandlerGetObatByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *ht
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		responseObat.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responseObat)
-	}
-
-	err = json.NewDecoder(r.Body).Decode(&obat)
-	if err != nil {
-		responseObat.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responseObat)
 	}
 
@@ -176,12 +164,6 @@ func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&obat)
-	if err != nil {
-		responseObat.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(responseObat)
-	}
-
 	_, err = DeleteObat(mconn, collectionname, ID)
 	if err != nil {
 		responseObat.Message = err.Error()
@@ -199,12 +181,6 @@ func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 func HandlerGetAllPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responsePenyakit.Status = false
-
-	err := json.NewDecoder(r.Body).Decode(&penyakit)
-	if err != nil {
-		responsePenyakit.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(responsePenyakit)
-	}
 
 	penyakits, err := GetAllPenyakit(mconn, collectionname)
 	if err != nil {
@@ -232,12 +208,6 @@ func HandlerGetPenyakitByID(MONGOCONNSTRINGENV, dbname, collectionname string, r
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		responsePenyakit.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
-	}
-
-	err = json.NewDecoder(r.Body).Decode(&penyakit)
-	if err != nil {
-		responsePenyakit.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responsePenyakit)
 	}
 
@@ -325,12 +295,6 @@ func HandlerDeletePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		responsePenyakit.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
-	}
-
-	err = json.NewDecoder(r.Body).Decode(&penyakit)
-	if err != nil {
-		responsePenyakit.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responsePenyakit)
 	}
 
