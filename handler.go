@@ -36,11 +36,9 @@ func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Req
 		return GCFReturnStruct(responseUser)
 	}
 
-	if responseUser.Status == true {
-		responseUser.Message = "Login success"
-		responseUser.Data = []User{users}
-
-	}
+	responseUser.Status = true
+	responseUser.Message = "Login success"
+	responseUser.Data = []User{users}
 
 	return GCFReturnStruct(responseUser)
 }
@@ -56,10 +54,9 @@ func HandlerGetAllObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	if responseObat.Status == true {
-		responseObat.Message = "Get Obat Success"
-		responseObat.Data = obats
-	}
+	responseObat.Status = true
+	responseObat.Message = "Get Obat Success"
+	responseObat.Data = obats
 
 	return GCFReturnStruct(responseObat)
 }
@@ -86,10 +83,9 @@ func HandlerGetObatByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *ht
 		return GCFReturnStruct(responseObat)
 	}
 
-	if responseObat.Status == true {
-		responseObat.Message = "Get Obat By ID Success"
-		responseObat.Data = []Obat{obats}
-	}
+	responseObat.Status = true
+	responseObat.Message = "Get Obat By ID Success"
+	responseObat.Data = []Obat{obats}
 
 	return GCFReturnStruct(responseObat)
 }
@@ -110,10 +106,9 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	if responseObat.Status == true {
-		responseObat.Message = "Insert Obat Success"
-		responseObat.Data = []Obat{obat}
-	}
+	responseObat.Status = true
+	responseObat.Message = "Insert Obat Success"
+	responseObat.Data = []Obat{obat}
 
 	return GCFReturnStruct(responseObat)
 }
@@ -146,10 +141,9 @@ func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	if responseObat.Status == true {
-		responseObat.Message = "Update Obat Success"
-		responseObat.Data = []Obat{obat}
-	}
+	responseObat.Status = true
+	responseObat.Message = "Update Obat Success"
+	responseObat.Data = []Obat{obat}
 
 	return GCFReturnStruct(responseObat)
 }
@@ -176,10 +170,9 @@ func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	if responseObat.Status == true {
-		responseObat.Message = "Delete Obat Success"
-		responseObat.Data = []Obat{obat}
-	}
+	responseObat.Status = true
+	responseObat.Message = "Delete Obat Success"
+	responseObat.Data = []Obat{obat}
 
 	return GCFReturnStruct(responseObat)
 }
@@ -195,10 +188,9 @@ func HandlerGetAllPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	if responsePenyakit.Status == true {
-		responsePenyakit.Message = "Get Penyakit Success"
-		responsePenyakit.Data = penyakits
-	}
+	responsePenyakit.Status = true
+	responsePenyakit.Message = "Get Penyakit Success"
+	responsePenyakit.Data = penyakits
 
 	return GCFReturnStruct(responsePenyakit)
 }
@@ -225,10 +217,9 @@ func HandlerGetPenyakitByID(MONGOCONNSTRINGENV, dbname, collectionname string, r
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	if responsePenyakit.Status == true {
-		responsePenyakit.Message = "Get Penyakit By ID Success"
-		responsePenyakit.Data = []Penyakit{penyakits}
-	}
+	responsePenyakit.Status = true
+	responsePenyakit.Message = "Get Penyakit By ID Success"
+	responsePenyakit.Data = []Penyakit{penyakits}
 
 	return GCFReturnStruct(responsePenyakit)
 }
@@ -249,10 +240,9 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	if responsePenyakit.Status == true {
-		responsePenyakit.Message = "Insert Penyakit Success"
-		responsePenyakit.Data = []Penyakit{penyakit}
-	}
+	responsePenyakit.Status = true
+	responsePenyakit.Message = "Insert Penyakit Success"
+	responsePenyakit.Data = []Penyakit{penyakit}
 
 	return GCFReturnStruct(responsePenyakit)
 }
@@ -285,10 +275,9 @@ func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	if responsePenyakit.Status == true {
-		responsePenyakit.Message = "Update Penyakit Success"
-		responsePenyakit.Data = []Penyakit{penyakit}
-	}
+	responsePenyakit.Status = true
+	responsePenyakit.Message = "Update Penyakit Success"
+	responsePenyakit.Data = []Penyakit{penyakit}
 
 	return GCFReturnStruct(responsePenyakit)
 }
@@ -315,10 +304,9 @@ func HandlerDeletePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	if responsePenyakit.Status == true {
-		responsePenyakit.Message = "Delete Penyakit Success"
-		responsePenyakit.Data = []Penyakit{penyakit}
-	}
+	responsePenyakit.Status = true
+	responsePenyakit.Message = "Delete Penyakit Success"
+	responsePenyakit.Data = []Penyakit{penyakit}
 
 	return GCFReturnStruct(responsePenyakit)
 }

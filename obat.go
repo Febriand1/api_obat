@@ -20,6 +20,16 @@ func MongoConnect(MONGOCONNSTRINGENV, dbname string) *mongo.Database {
 	return atdb.MongoConnect(DBmongoinfo)
 }
 
+func InsertOneDoc(db *mongo.Database, col string, docs interface{}) (insertedID primitive.ObjectID, err error) {
+	cols := db.Collection(col)
+	result, err := cols.InsertOne(context.Background(), docs)
+	if err != nil {
+		fmt.Printf("InsertOneDoc: %v\n", err)
+	}
+	insertedID = result.InsertedID.(primitive.ObjectID)
+	return insertedID, err
+}
+
 func Register(db *mongo.Database, col string, userdata User) error {
 	cols := db.Collection(col)
 
@@ -92,19 +102,16 @@ func GetObatByID(db *mongo.Database, col string, _id primitive.ObjectID) (obat O
 }
 
 func InsertObat(db *mongo.Database, col string, obat Obat) (InsertedID primitive.ObjectID, status bool, err error) {
-	cols := db.Collection(col)
-
 	dataobat := bson.D{
 		{Key: "jenis_obat", Value: obat.Jenis_Obat},
 		{Key: "nama_obat", Value: obat.Nama_Obat},
 		{Key: "deskripsi", Value: obat.Deskripsi},
 	}
 
-	result, err := cols.InsertOne(context.Background(), dataobat)
+	_, err = InsertOneDoc(db, col, dataobat)
 	if err != nil {
 		return InsertedID, false, err
 	}
-	InsertedID = result.InsertedID.(primitive.ObjectID)
 
 	return InsertedID, true, nil
 }
@@ -186,8 +193,6 @@ func GetPenyakitByID(db *mongo.Database, col string, _id primitive.ObjectID) (pe
 }
 
 func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (InsertedID primitive.ObjectID, status bool, err error) {
-	cols := db.Collection(col)
-
 	datapenyakit := bson.D{
 		{Key: "jenis_penyakit", Value: penyakit.Jenis_Penyakit},
 		{Key: "nama_penyakit", Value: penyakit.Nama_Penyakit},
@@ -197,11 +202,10 @@ func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (Inserted
 		}},
 	}
 
-	result, err := cols.InsertOne(context.Background(), datapenyakit)
+	_, err = InsertOneDoc(db, col, datapenyakit)
 	if err != nil {
 		return InsertedID, false, err
 	}
-	InsertedID = result.InsertedID.(primitive.ObjectID)
 
 	return InsertedID, true, nil
 }
