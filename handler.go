@@ -48,6 +48,12 @@ func HandlerGetAllObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responseObat.Status = false
 
+	err := json.NewDecoder(r.Body).Decode(&obat)
+	if err != nil {
+		responseObat.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(responseObat)
+	}
+
 	obats, err := GetAllObat(mconn, collectionname)
 	if err != nil {
 		responseObat.Message = err.Error()
@@ -77,6 +83,12 @@ func HandlerGetObatByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *ht
 		return GCFReturnStruct(responseObat)
 	}
 
+	err = json.NewDecoder(r.Body).Decode(&obat)
+	if err != nil {
+		responseObat.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(responseObat)
+	}
+
 	obats, err := GetObatByID(mconn, collectionname, ID)
 	if err != nil {
 		responseObat.Message = err.Error()
@@ -94,15 +106,15 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responseObat.Status = false
 
-	_, err := InsertObat(mconn, collectionname, obat)
+	err := json.NewDecoder(r.Body).Decode(&obat)
 	if err != nil {
-		responseObat.Message = err.Error()
+		responseObat.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responseObat)
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&obat)
+	_, err = InsertObat(mconn, collectionname, obat)
 	if err != nil {
-		responseObat.Message = "error parsing application/json: " + err.Error()
+		responseObat.Message = err.Error()
 		return GCFReturnStruct(responseObat)
 	}
 
@@ -164,6 +176,12 @@ func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
+	err = json.NewDecoder(r.Body).Decode(&obat)
+	if err != nil {
+		responseObat.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(responseObat)
+	}
+
 	_, err = DeleteObat(mconn, collectionname, ID)
 	if err != nil {
 		responseObat.Message = err.Error()
@@ -181,6 +199,12 @@ func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 func HandlerGetAllPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responsePenyakit.Status = false
+
+	err := json.NewDecoder(r.Body).Decode(&penyakit)
+	if err != nil {
+		responsePenyakit.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(responsePenyakit)
+	}
 
 	penyakits, err := GetAllPenyakit(mconn, collectionname)
 	if err != nil {
@@ -211,6 +235,12 @@ func HandlerGetPenyakitByID(MONGOCONNSTRINGENV, dbname, collectionname string, r
 		return GCFReturnStruct(responsePenyakit)
 	}
 
+	err = json.NewDecoder(r.Body).Decode(&penyakit)
+	if err != nil {
+		responsePenyakit.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(responsePenyakit)
+	}
+
 	penyakits, err := GetPenyakitByID(mconn, collectionname, ID)
 	if err != nil {
 		responsePenyakit.Message = err.Error()
@@ -228,15 +258,15 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	responsePenyakit.Status = false
 
-	_, err := InsertPenyakit(mconn, collectionname, penyakit)
+	err := json.NewDecoder(r.Body).Decode(&penyakit)
 	if err != nil {
-		responsePenyakit.Message = err.Error()
+		responsePenyakit.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&penyakit)
+	_, err = InsertPenyakit(mconn, collectionname, penyakit)
 	if err != nil {
-		responsePenyakit.Message = "error parsing application/json: " + err.Error()
+		responsePenyakit.Message = err.Error()
 		return GCFReturnStruct(responsePenyakit)
 	}
 
@@ -295,6 +325,12 @@ func HandlerDeletePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		responsePenyakit.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(responsePenyakit)
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&penyakit)
+	if err != nil {
+		responsePenyakit.Message = "error parsing application/json: " + err.Error()
 		return GCFReturnStruct(responsePenyakit)
 	}
 
