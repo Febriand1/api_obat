@@ -23,7 +23,7 @@ func GCFReturnStruct(DataStuct any) string {
 
 func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseUser.Status = false
+	responseUser.Status = 400
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -36,7 +36,7 @@ func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Req
 		return GCFReturnStruct(responseUser)
 	}
 
-	responseUser.Status = true
+	responseUser.Status = 200
 	responseUser.Message = "Login success"
 	responseUser.Data = []User{users}
 
@@ -46,7 +46,7 @@ func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Req
 // obat
 func HandlerGetAllObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = false
+	responseObat.Status = 400
 
 	obats, err := GetAllObat(mconn, collectionname)
 	if err != nil {
@@ -54,7 +54,7 @@ func HandlerGetAllObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	responseObat.Status = true
+	responseObat.Status = 200
 	responseObat.Message = "Get Obat Success"
 	responseObat.Data = obats
 
@@ -63,7 +63,7 @@ func HandlerGetAllObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 
 func HandlerGetObatByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = false
+	responseObat.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
@@ -83,7 +83,7 @@ func HandlerGetObatByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *ht
 		return GCFReturnStruct(responseObat)
 	}
 
-	responseObat.Status = true
+	responseObat.Status = 200
 	responseObat.Message = "Get Obat By ID Success"
 	responseObat.Data = []Obat{obats}
 
@@ -92,7 +92,7 @@ func HandlerGetObatByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *ht
 
 func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = false
+	responseObat.Status = 400
 
 	err := json.NewDecoder(r.Body).Decode(&obat)
 	if err != nil {
@@ -106,7 +106,7 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	responseObat.Status = true
+	responseObat.Status = 200
 	responseObat.Message = "Insert Obat Success"
 	responseObat.Data = []Obat{obat}
 
@@ -115,7 +115,7 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 
 func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = false
+	responseObat.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
@@ -141,7 +141,7 @@ func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	responseObat.Status = true
+	responseObat.Status = 200
 	responseObat.Message = "Update Obat Success"
 	responseObat.Data = []Obat{obat}
 
@@ -150,7 +150,7 @@ func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 
 func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = false
+	responseObat.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
@@ -170,7 +170,7 @@ func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(responseObat)
 	}
 
-	responseObat.Status = true
+	responseObat.Status = 200
 	responseObat.Message = "Delete Obat Success"
 	responseObat.Data = []Obat{obat}
 
@@ -180,7 +180,7 @@ func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 // penyakit
 func HandlerGetAllPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = false
+	responsePenyakit.Status = 400
 
 	penyakits, err := GetAllPenyakit(mconn, collectionname)
 	if err != nil {
@@ -188,7 +188,7 @@ func HandlerGetAllPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	responsePenyakit.Status = true
+	responsePenyakit.Status = 200
 	responsePenyakit.Message = "Get Penyakit Success"
 	responsePenyakit.Data = penyakits
 
@@ -197,7 +197,7 @@ func HandlerGetAllPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 
 func HandlerGetPenyakitByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = false
+	responsePenyakit.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
@@ -217,7 +217,7 @@ func HandlerGetPenyakitByID(MONGOCONNSTRINGENV, dbname, collectionname string, r
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	responsePenyakit.Status = true
+	responsePenyakit.Status = 200
 	responsePenyakit.Message = "Get Penyakit By ID Success"
 	responsePenyakit.Data = []Penyakit{penyakits}
 
@@ -226,7 +226,7 @@ func HandlerGetPenyakitByID(MONGOCONNSTRINGENV, dbname, collectionname string, r
 
 func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = false
+	responsePenyakit.Status = 400
 
 	err := json.NewDecoder(r.Body).Decode(&penyakit)
 	if err != nil {
@@ -240,7 +240,7 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	responsePenyakit.Status = true
+	responsePenyakit.Status = 200
 	responsePenyakit.Message = "Insert Penyakit Success"
 	responsePenyakit.Data = []Penyakit{penyakit}
 
@@ -249,7 +249,7 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 
 func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = false
+	responsePenyakit.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
@@ -275,7 +275,7 @@ func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	responsePenyakit.Status = true
+	responsePenyakit.Status = 200
 	responsePenyakit.Message = "Update Penyakit Success"
 	responsePenyakit.Data = []Penyakit{penyakit}
 
@@ -284,7 +284,7 @@ func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 
 func HandlerDeletePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = false
+	responsePenyakit.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
@@ -304,7 +304,7 @@ func HandlerDeletePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(responsePenyakit)
 	}
 
-	responsePenyakit.Status = true
+	responsePenyakit.Status = 200
 	responsePenyakit.Message = "Delete Penyakit Success"
 	responsePenyakit.Data = []Penyakit{penyakit}
 
