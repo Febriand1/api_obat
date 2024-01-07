@@ -4,15 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
-	user     User
-	obat     Obat
-	penyakit Penyakit
-	// responseUser     ResponseUser
+	user             User
+	obat             Obat
+	penyakit         Penyakit
+	responseUser     ResponseUser
 	responseObat     ResponseObat
 	responsePenyakit ResponsePenyakit
 )
@@ -24,25 +23,23 @@ func GCFReturnStruct(DataStuct any) string {
 
 func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	response := bson.M{
-		"status": 400,
-	}
+	responseUser.Status = 400
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		response["message"] = "error parsing application/json: " + err.Error()
+		responseUser.Message = "error parsing application/json: " + err.Error()
 	}
 
 	users, _, err := Login(mconn, collectionname, user)
 	if err != nil {
-		response["message"] = err.Error()
-		return GCFReturnStruct(response)
+		responseUser.Message = err.Error()
+		return GCFReturnStruct(responseUser)
 	}
 
-	response["status"] = 200
-	response["message"] = "Login Success" + users.Username
+	responseUser.Status = 200
+	responseUser.Message = "Selamat Datang " + users.Username
 
-	return GCFReturnStruct(response)
+	return GCFReturnStruct(responseUser)
 }
 
 // obat
