@@ -1,14 +1,16 @@
 package apiobat
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type User struct {
 	ID       primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Username string             `bson:"username,omitempty" json:"username,omitempty"`
-	Password string             `bson:"password,omitempty" json:"password,omitempty"`
+	Username string             `bson:"username," json:"username,"`
+	Password string             `bson:"password," json:"password,"`
 }
 
-//tambah gambar
+// tambah gambar
 type Obat struct {
 	ID         primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
 	Jenis_Obat string             `bson:"jenis_obat,omitempty" json:"jenis_obat,omitempty"`
@@ -36,17 +38,14 @@ type RumahSakit struct {
 type ResponseUser struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
-	Data    []User `json:"data"`
 }
 
 type ResponseObat struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
-	Data    []Obat `json:"data"`
 }
 
 type ResponsePenyakit struct {
 	Status  int        `json:"status"`
 	Message string     `json:"message"`
-	Data    []Penyakit `json:"data"`
 }
