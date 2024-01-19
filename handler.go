@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
-	user             User
-	obat             Obat
-	penyakit         Penyakit
-	responseUser     ResponseUser
-	responseObat     ResponseObat
-	responsePenyakit ResponsePenyakit
+	user       User
+	obat       Obat
+	penyakit   Penyakit
+	credential Credential
+	response   Response
 )
 
 func GCFReturnStruct(DataStuct any) string {
@@ -23,279 +23,319 @@ func GCFReturnStruct(DataStuct any) string {
 
 func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseUser.Status = 400
+	credential.Status = 400
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		responseUser.Message = "error parsing application/json: " + err.Error()
+		credential.Message = "error parsing application/json: " + err.Error()
 	}
 
 	users, _, err := Login(mconn, collectionname, user)
 	if err != nil {
-		responseUser.Message = err.Error()
-		return GCFReturnStruct(responseUser)
+		credential.Message = err.Error()
+		return GCFReturnStruct(credential)
 	}
 
-	responseUser.Status = 200
-	responseUser.Message = "Selamat Datang " + users.Username
+	credential.Status = 200
+	credential.Message = "Selamat Datang " + users.Username
 
-	return GCFReturnStruct(responseUser)
+	return GCFReturnStruct(credential)
 }
 
 // obat
 func HandlerGetAllObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = 400
+	response.Status = 400
 
-	_, err := GetAllObat(mconn, collectionname)
+	data, err := GetAllObat(mconn, collectionname)
 	if err != nil {
-		responseObat.Message = err.Error()
-		return GCFReturnStruct(responseObat)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responseObat.Status = 200
-	responseObat.Message = "Get Obat Success"
+	response.Status = 200
+	response.Message = "Get All Obat Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responseObat)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerGetObatByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = 400
+	response.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
-		responseObat.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(responseObat)
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		responseObat.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responseObat)
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
-	obats, err := GetObatByID(mconn, collectionname, ID)
+	data, err := GetObatByID(mconn, collectionname, ID)
 	if err != nil {
-		responseObat.Message = err.Error()
-		return GCFReturnStruct(responseObat)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responseObat.Status = 200
-	responseObat.Message = "Get Obat By ID Success  " + obats.Nama_Obat
+	response.Status = 200
+	response.Message = "Get Obat By ID Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responseObat)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = 400
+	response.Status = 400
 
 	err := json.NewDecoder(r.Body).Decode(&obat)
 	if err != nil {
-		responseObat.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(responseObat)
+		response.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	_, err = InsertObat(mconn, collectionname, obat)
+	data, err := InsertObat(mconn, collectionname, obat)
 	if err != nil {
-		responseObat.Message = err.Error()
-		return GCFReturnStruct(responseObat)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responseObat.Status = 200
-	responseObat.Message = "Insert Obat Success " + obat.Nama_Obat
+	response.Status = 200
+	response.Message = "Insert Obat Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responseObat)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = 400
+	response.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
-		responseObat.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(responseObat)
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		responseObat.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responseObat)
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&obat)
 	if err != nil {
-		responseObat.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(responseObat)
+		response.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	_, err = UpdateObat(mconn, collectionname, ID, obat)
+	data, err := UpdateObat(mconn, collectionname, ID, obat)
 	if err != nil {
-		responseObat.Message = err.Error()
-		return GCFReturnStruct(responseObat)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responseObat.Status = 200
-	responseObat.Message = "Update Obat Success " + obat.Nama_Obat
+	response.Status = 200
+	response.Message = "Update Obat Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responseObat)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerDeleteObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responseObat.Status = 400
+	response.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
-		responseObat.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(responseObat)
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		responseObat.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responseObat)
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	_, err = DeleteObat(mconn, collectionname, ID)
 	if err != nil {
-		responseObat.Message = err.Error()
-		return GCFReturnStruct(responseObat)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responseObat.Status = 200
-	responseObat.Message = "Delete Obat Success " + obat.Nama_Obat
+	response.Status = 200
+	response.Message = "Delete Obat Success " + obat.Nama_Obat
 
-	return GCFReturnStruct(responseObat)
+	return GCFReturnStruct(response)
 }
 
 // penyakit
 func HandlerGetAllPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = 400
+	response.Status = 400
 
-	_, err := GetAllPenyakit(mconn, collectionname)
+	data, err := GetAllPenyakit(mconn, collectionname)
 	if err != nil {
-		responsePenyakit.Message = err.Error()
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responsePenyakit.Status = 200
-	responsePenyakit.Message = "Get Penyakit Success"
+	response.Status = 200
+	response.Message = "Get Penyakit Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responsePenyakit)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerGetPenyakitByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = 400
+	response.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
-		responsePenyakit.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		responsePenyakit.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
-	penyakits, err := GetPenyakitByID(mconn, collectionname, ID)
+	data, err := GetPenyakitByID(mconn, collectionname, ID)
 	if err != nil {
-		responsePenyakit.Message = err.Error()
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responsePenyakit.Status = 200
-	responsePenyakit.Message = "Get Penyakit By ID Success " + penyakits.Nama_Penyakit
+	response.Status = 200
+	response.Message = "Get Penyakit By ID Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responsePenyakit)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = 400
+	response.Status = 400
 
 	err := json.NewDecoder(r.Body).Decode(&penyakit)
 	if err != nil {
-		responsePenyakit.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	_, err = InsertPenyakit(mconn, collectionname, penyakit)
+	data, err := InsertPenyakit(mconn, collectionname, penyakit)
 	if err != nil {
-		responsePenyakit.Message = err.Error()
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responsePenyakit.Status = 200
-	responsePenyakit.Message = "Insert Penyakit Success " + penyakit.Nama_Penyakit
+	response.Status = 200
+	response.Message = "Insert Penyakit Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responsePenyakit)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = 400
+	response.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
-		responsePenyakit.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		responsePenyakit.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&penyakit)
 	if err != nil {
-		responsePenyakit.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	_, err = UpdatePenyakit(mconn, collectionname, ID, penyakit)
+	data, err := UpdatePenyakit(mconn, collectionname, ID, penyakit)
 	if err != nil {
-		responsePenyakit.Message = err.Error()
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responsePenyakit.Status = 200
-	responsePenyakit.Message = "Update Penyakit Success " + penyakit.Nama_Penyakit
+	response.Status = 200
+	response.Message = "Update Penyakit Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
 
-	return GCFReturnStruct(responsePenyakit)
+	return GCFReturnStruct(responData)
 }
 
 func HandlerDeletePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
-	responsePenyakit.Status = 400
+	response.Status = 400
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
-		responsePenyakit.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	ID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		responsePenyakit.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
 	}
 
 	_, err = DeletePenyakit(mconn, collectionname, ID)
 	if err != nil {
-		responsePenyakit.Message = err.Error()
-		return GCFReturnStruct(responsePenyakit)
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
 	}
 
-	responsePenyakit.Status = 200
-	responsePenyakit.Message = "Delete Penyakit Success " + penyakit.Nama_Penyakit
+	response.Status = 200
+	response.Message = "Delete Penyakit Success " + penyakit.Nama_Penyakit
 
-	return GCFReturnStruct(responsePenyakit)
+	return GCFReturnStruct(response)
 }

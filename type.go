@@ -5,9 +5,10 @@ import (
 )
 
 type User struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Username string             `bson:"username," json:"username,"`
-	Password string             `bson:"password," json:"password,"`
+	ID               primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Username         string             `bson:"username," json:"username,"`
+	Password         string             `bson:"password," json:"password,"`
+	Confirm_Password string             `bson:"confirm_password," json:"confirm_password,"`
 }
 
 // tambah gambar
@@ -16,6 +17,7 @@ type Obat struct {
 	Jenis_Obat string             `bson:"jenis_obat,omitempty" json:"jenis_obat,omitempty"`
 	Nama_Obat  string             `bson:"nama_obat,omitempty" json:"nama_obat,omitempty"`
 	Deskripsi  string             `bson:"deskripsi,omitempty" json:"deskripsi,omitempty"`
+	Gambar     string             `bson:"gambar,omitempty" json:"gambar,omitempty"`
 }
 
 type Penyakit struct {
@@ -35,17 +37,12 @@ type RumahSakit struct {
 	Longitude string             `bson:"longitude,omitempty" json:"longitude,omitempty"`
 }
 
-type ResponseUser struct {
+type Credential struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
 
-type ResponseObat struct {
+type Response struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
-}
-
-type ResponsePenyakit struct {
-	Status  int        `json:"status"`
-	Message string     `json:"message"`
 }

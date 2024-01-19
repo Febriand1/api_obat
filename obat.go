@@ -101,7 +101,7 @@ func GetObatByID(db *mongo.Database, col string, _id primitive.ObjectID) (obat O
 	return obat, nil
 }
 
-func InsertObat(db *mongo.Database, col string, obat Obat) (InsertedID primitive.ObjectID, err error) {
+func InsertObat(db *mongo.Database, col string, obat Obat) (docs Obat, err error) {
 	objectID := primitive.NewObjectID()
 
 	dataobat := bson.D{
@@ -111,16 +111,18 @@ func InsertObat(db *mongo.Database, col string, obat Obat) (InsertedID primitive
 		{Key: "deskripsi", Value: obat.Deskripsi},
 	}
 
-	InsertedID, err = InsertOneDoc(db, col, dataobat)
+	InsertedID, err := InsertOneDoc(db, col, dataobat)
 	if err != nil {
 		fmt.Printf("InsertObat: %v\n", err)
-		return InsertedID, err
+		return docs, err
 	}
 
-	return InsertedID, nil
+	docs.ID = InsertedID
+
+	return docs, nil
 }
 
-func UpdateObat(db *mongo.Database, col string, _id primitive.ObjectID, obat Obat) (status bool, err error) {
+func UpdateObat(db *mongo.Database, col string, _id primitive.ObjectID, obat Obat) (docs Obat, err error) {
 	cols := db.Collection(col)
 
 	filter := bson.M{"_id": _id}
@@ -135,14 +137,14 @@ func UpdateObat(db *mongo.Database, col string, _id primitive.ObjectID, obat Oba
 
 	result, err := cols.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		return false, err
+		return docs, err
 	}
 
 	if result.MatchedCount == 0 {
-		return false, fmt.Errorf("data tidak di temukan dengan ID: %s", _id)
+		return docs, fmt.Errorf("data tidak di temukan dengan ID: %s", _id)
 	}
 
-	return true, nil
+	return docs, nil
 }
 
 func DeleteObat(db *mongo.Database, col string, _id primitive.ObjectID) (status bool, err error) {
@@ -196,7 +198,7 @@ func GetPenyakitByID(db *mongo.Database, col string, _id primitive.ObjectID) (pe
 	return penyakit, nil
 }
 
-func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (InsertedID primitive.ObjectID, err error) {
+func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (docs Penyakit, err error) {
 	objectID := primitive.NewObjectID()
 
 	datapenyakit := bson.D{
@@ -209,16 +211,18 @@ func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (Inserted
 		}},
 	}
 
-	InsertedID, err = InsertOneDoc(db, col, datapenyakit)
+	InsertedID, err := InsertOneDoc(db, col, datapenyakit)
 	if err != nil {
 		fmt.Printf("InsertPenyakit: %v\n", err)
-		return InsertedID, err
+		return docs, err
 	}
 
-	return InsertedID, nil
+	docs.ID = InsertedID
+
+	return docs, nil
 }
 
-func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, penyakit Penyakit) (status bool, err error) {
+func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, penyakit Penyakit) (docs Penyakit, err error) {
 	cols := db.Collection(col)
 
 	filter := bson.M{"_id": _id}
@@ -236,14 +240,14 @@ func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, peny
 
 	result, err := cols.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		return false, err
+		return docs, err
 	}
 
 	if result.MatchedCount == 0 {
-		return false, fmt.Errorf("data tidak di temukan dengan ID: %s", _id)
+		return docs, fmt.Errorf("data tidak di temukan dengan ID: %s", _id)
 	}
 
-	return true, nil
+	return docs, nil
 }
 
 func DeletePenyakit(db *mongo.Database, col string, _id primitive.ObjectID) (status bool, err error) {
