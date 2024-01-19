@@ -12,6 +12,7 @@ var (
 	user       User
 	obat       Obat
 	penyakit   Penyakit
+	rs         RumahSakit
 	credential Credential
 	response   Response
 )
@@ -336,6 +337,155 @@ func HandlerDeletePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 
 	response.Status = 200
 	response.Message = "Delete Penyakit Success " + penyakit.Nama_Penyakit
+
+	return GCFReturnStruct(response)
+}
+
+// rumah sakit
+func HandlerGetAllRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+	response.Status = 400
+
+	data, err := GetAllRS(mconn, collectionname)
+	if err != nil {
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	response.Status = 200
+	response.Message = "Get RS Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
+
+	return GCFReturnStruct(responData)
+}
+
+func HandlerGetRSByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+	response.Status = 400
+
+	id := r.URL.Query().Get("_id")
+	if id == "" {
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	data, err := GetRSByID(mconn, collectionname, ID)
+	if err != nil {
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	response.Status = 200
+	response.Message = "Get RS By ID Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
+
+	return GCFReturnStruct(responData)
+}
+
+func HandlerInsertRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+	response.Status = 400
+
+	err := json.NewDecoder(r.Body).Decode(&rs)
+	if err != nil {
+		response.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	data, err := InsertRS(mconn, collectionname, rs)
+	if err != nil {
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	response.Status = 200
+	response.Message = "Insert RS Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
+
+	return GCFReturnStruct(responData)
+}
+
+func HandlerUpdateRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+	response.Status = 400
+
+	id := r.URL.Query().Get("_id")
+	if id == "" {
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&rs)
+	if err != nil {
+		response.Message = "error parsing application/json: " + err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	data, err := UpdateRS(mconn, collectionname, ID, rs)
+	if err != nil {
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	response.Status = 200
+	response.Message = "Update RS Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
+
+	return GCFReturnStruct(responData)
+}
+
+func HandlerDeleteRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+	response.Status = 400
+
+	id := r.URL.Query().Get("_id")
+	if id == "" {
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	_, err = DeleteRS(mconn, collectionname, ID)
+	if err != nil {
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	response.Status = 200
+	response.Message = "Delete RS Success " + rs.Nama_RS
 
 	return GCFReturnStruct(response)
 }

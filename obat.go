@@ -266,3 +266,104 @@ func DeletePenyakit(db *mongo.Database, col string, _id primitive.ObjectID) (sta
 
 	return true, nil
 }
+
+// rumah sakit
+func GetAllRS(db *mongo.Database, col string) (rs []RumahSakit, err error) {
+	cols := db.Collection(col)
+
+	cursor, err := cols.Find(context.Background(), bson.M{})
+	if err != nil {
+		return rs, err
+	}
+
+	err = cursor.All(context.Background(), &rs)
+	if err != nil {
+		return rs, err
+	}
+
+	return rs, nil
+}
+
+func GetRSByID(db *mongo.Database, col string, _id primitive.ObjectID) (rs RumahSakit, err error) {
+	cols := db.Collection(col)
+
+	filter := bson.M{"_id": _id}
+
+	err = cols.FindOne(context.Background(), filter).Decode(&rs)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			fmt.Println("data tidak di temukan dengan ID: ", _id)
+		} else {
+			fmt.Println("error retrieving data for ID", _id, ":", err.Error())
+		}
+	}
+
+	return rs, nil
+}
+
+func InsertRS(db *mongo.Database, col string, rs RumahSakit) (docs RumahSakit, err error) {
+	objectID := primitive.NewObjectID()
+
+	datapenyakit := bson.D{
+		{Key: "_id", Value: objectID},
+		{Key: "nama_rs", Value: rs.Nama_RS},
+		{Key: "no_telp", Value: rs.No_Telp},
+		{Key: "alamat", Value: rs.Alamat},
+		{Key: "latitude", Value: rs.Latitude},
+		{Key: "longitude", Value: rs.Longitude},
+	}
+
+	InsertedID, err := InsertOneDoc(db, col, datapenyakit)
+	if err != nil {
+		fmt.Printf("InsertPenyakit: %v\n", err)
+		return docs, err
+	}
+
+	docs.ID = InsertedID
+
+	return docs, nil
+}
+
+func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, rs RumahSakit) (docs RumahSakit, err error) {
+	cols := db.Collection(col)
+
+	filter := bson.M{"_id": _id}
+
+	update := bson.D{
+		{Key: "$set", Value: bson.D{
+			{Key: "nama_rs", Value: rs.Nama_RS},
+			{Key: "no_telp", Value: rs.No_Telp},
+			{Key: "alamat", Value: rs.Alamat},
+			{Key: "latitude", Value: rs.Latitude},
+			{Key: "longitude", Value: rs.Longitude},
+		}},
+	}
+
+	result, err := cols.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return docs, err
+	}
+
+	if result.MatchedCount == 0 {
+		return docs, fmt.Errorf("data tidak di temukan dengan ID: %s", _id)
+	}
+
+	return docs, nil
+}
+
+func DeleteRS(db *mongo.Database, col string, _id primitive.ObjectID) (status bool, err error) {
+	cols := db.Collection(col)
+
+	filter := bson.M{"_id": _id}
+
+	result, err := cols.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return false, err
+	}
+
+	if result.DeletedCount == 0 {
+		return false, fmt.Errorf("data tidak di temukan dengan ID: %s", _id)
+	}
+
+	return true, nil
+}
