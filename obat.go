@@ -9,7 +9,6 @@ import (
 
 	"github.com/aiteung/atdb"
 	image "github.com/intern-monitoring/backend-intermoni"
-	intermoni "github.com/intern-monitoring/backend-intermoni"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -148,7 +147,7 @@ func UpdateObat(db *mongo.Database, col string, _id primitive.ObjectID, r *http.
 	if gambar != "" {
 		imageUrl = gambar
 	} else {
-		imageUrl, err := intermoni.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
+		imageUrl, err := image.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
 		if err != nil {
 			return docs, fmt.Errorf("error save file: %s", err)
 		}
@@ -341,7 +340,7 @@ func InsertRS(db *mongo.Database, col string, r *http.Request) (docs RumahSakit,
 
 	objectID := primitive.NewObjectID()
 
-	imageUrl, err := intermoni.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
+	imageUrl, err := image.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
 	if err != nil {
 		return docs, fmt.Errorf("error save file: %s", err)
 	}
@@ -380,7 +379,7 @@ func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Re
 	if gambar != "" {
 		imageUrl = gambar
 	} else {
-		imageUrl, err := intermoni.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
+		imageUrl, err := image.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
 		if err != nil {
 			return docs, fmt.Errorf("error save file: %s", err)
 		}

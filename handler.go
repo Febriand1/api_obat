@@ -102,11 +102,11 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	response.Status = 400
 
-	err := json.NewDecoder(r.Body).Decode(&obat)
-	if err != nil {
-		response.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(response)
-	}
+	// err := json.NewDecoder(r.Body).Decode(&obat)
+	// if err != nil {
+	// 	response.Message = "error parsing application/json: " + err.Error()
+	// 	return GCFReturnStruct(response)
+	// }
 
 	data, err := InsertObat(mconn, collectionname, r)
 	if err != nil {
@@ -141,11 +141,11 @@ func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(response)
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&obat)
-	if err != nil {
-		response.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(response)
-	}
+	// err = json.NewDecoder(r.Body).Decode(&obat)
+	// if err != nil {
+	// 	response.Message = "error parsing application/json: " + err.Error()
+	// 	return GCFReturnStruct(response)
+	// }
 
 	data, err := UpdateObat(mconn, collectionname, ID, r)
 	if err != nil {
@@ -400,11 +400,11 @@ func HandlerInsertRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	response.Status = 400
 
-	err := json.NewDecoder(r.Body).Decode(&rs)
-	if err != nil {
-		response.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(response)
-	}
+	// err := json.NewDecoder(r.Body).Decode(&rs)
+	// if err != nil {
+	// 	response.Message = "error parsing application/json: " + err.Error()
+	// 	return GCFReturnStruct(response)
+	// }
 
 	data, err := InsertRS(mconn, collectionname, r)
 	if err != nil {
@@ -439,11 +439,11 @@ func HandlerUpdateRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.
 		return GCFReturnStruct(response)
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&rs)
-	if err != nil {
-		response.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(response)
-	}
+	// err = json.NewDecoder(r.Body).Decode(&rs)
+	// if err != nil {
+	// 	response.Message = "error parsing application/json: " + err.Error()
+	// 	return GCFReturnStruct(response)
+	// }
 
 	data, err := UpdateRS(mconn, collectionname, ID, r)
 	if err != nil {
