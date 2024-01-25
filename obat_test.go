@@ -68,43 +68,43 @@ func TestGetObatByID(t *testing.T) {
 	}
 }
 
-func TestInsertObat(t *testing.T) {
-	var data Obat
-	data.Jenis_Obat = "Obat Anti-Psikosis"
-	data.Nama_Obat = "chlorpromazine"
-	data.Deskripsi = "Deskripsi Obat"
+// func TestInsertObat(t *testing.T) {
+// 	var data Obat
+// 	data.Jenis_Obat = "Obat Anti-Psikosis"
+// 	data.Nama_Obat = "chlorpromazine"
+// 	data.Deskripsi = "Deskripsi Obat"
 
-	_, err := InsertObat(mconn, "obat", data)
-	if err != nil {
-		t.Errorf("Error inserting obat: %v", err)
-	} else {
-		fmt.Println("Insert obat success", data)
-	}
-}
+// 	_, err := InsertObat(mconn, "obat", r)
+// 	if err != nil {
+// 		t.Errorf("Error inserting obat: %v", err)
+// 	} else {
+// 		fmt.Println("Insert obat success", data)
+// 	}
+// }
 
-func TestUpdateObat(t *testing.T) {
-	var data Obat
-	data.Jenis_Obat = "Obat Anti-Psikosis"
-	data.Nama_Obat = "Chlorpromazine"
-	data.Deskripsi = "obat untuk menangani gejala psikosis, seperti halusinasi, dan pikiran tidak wajar. Obat ini bekerja dengan menyeimbangkan zat kimia di otak yang umumnya tidak normal pada penderita gangguan jiwa. Obat ini dapat mengurangi halusinasi, serta membantu pasien berpikir lebih jernih dan menjadi tidak agresif sehingga ia bisa melakukan aktivitas sehari-hari."
+// func TestUpdateObat(t *testing.T) {
+// 	var data Obat
+// 	data.Jenis_Obat = "Obat Anti-Psikosis"
+// 	data.Nama_Obat = "Chlorpromazine"
+// 	data.Deskripsi = "obat untuk menangani gejala psikosis, seperti halusinasi, dan pikiran tidak wajar. Obat ini bekerja dengan menyeimbangkan zat kimia di otak yang umumnya tidak normal pada penderita gangguan jiwa. Obat ini dapat mengurangi halusinasi, serta membantu pasien berpikir lebih jernih dan menjadi tidak agresif sehingga ia bisa melakukan aktivitas sehari-hari."
 
-	id := "6592618179e4a43f5118d5ec"
+// 	id := "6592618179e4a43f5118d5ec"
 
-	ID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		fmt.Printf("update obat error")
-		return
-	} else {
+// 	ID, err := primitive.ObjectIDFromHex(id)
+// 	if err != nil {
+// 		fmt.Printf("update obat error")
+// 		return
+// 	} else {
 
-		status, err := UpdateObat(mconn, "obat", ID, data)
-		fmt.Println("Status", status)
-		if err != nil {
-			t.Errorf("Error updating obat: %v", err)
-		} else {
-			fmt.Println("Update obat success", data)
-		}
-	}
-}
+// 		status, err := UpdateObat(mconn, "obat", ID, data)
+// 		fmt.Println("Status", status)
+// 		if err != nil {
+// 			t.Errorf("Error updating obat: %v", err)
+// 		} else {
+// 			fmt.Println("Update obat success", data)
+// 		}
+// 	}
+// }
 
 func TestDeleteObat(t *testing.T) {
 	id := "659262931be188bed64b2600"

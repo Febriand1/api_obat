@@ -4,13 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/aiteung/atdb"
+	image "github.com/intern-monitoring/backend-intermoni"
+	intermoni "github.com/intern-monitoring/backend-intermoni"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+var imageUrl string
 
 func MongoConnect(MONGOCONNSTRINGENV, dbname string) *mongo.Database {
 	var DBmongoinfo = atdb.DBInfo{
@@ -101,14 +106,24 @@ func GetObatByID(db *mongo.Database, col string, _id primitive.ObjectID) (obat O
 	return obat, nil
 }
 
-func InsertObat(db *mongo.Database, col string, obat Obat) (docs Obat, err error) {
+func InsertObat(db *mongo.Database, col string, r *http.Request) (docs Obat, err error) {
+	jenisobat := r.FormValue("jenis_obat")
+	namaobat := r.FormValue("nama_obat")
+	deskripsi := r.FormValue("deskripsi")
+
+	imageUrl, err := image.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
+	if err != nil {
+		return docs, fmt.Errorf("error save file: %s", err)
+	}
+
 	objectID := primitive.NewObjectID()
 
 	dataobat := bson.D{
 		{Key: "_id", Value: objectID},
-		{Key: "jenis_obat", Value: obat.Jenis_Obat},
-		{Key: "nama_obat", Value: obat.Nama_Obat},
-		{Key: "deskripsi", Value: obat.Deskripsi},
+		{Key: "jenis_obat", Value: jenisobat},
+		{Key: "nama_obat", Value: namaobat},
+		{Key: "deskripsi", Value: deskripsi},
+		{Key: "gambar", Value: imageUrl},
 	}
 
 	InsertedID, err := InsertOneDoc(db, col, dataobat)
@@ -122,16 +137,32 @@ func InsertObat(db *mongo.Database, col string, obat Obat) (docs Obat, err error
 	return docs, nil
 }
 
-func UpdateObat(db *mongo.Database, col string, _id primitive.ObjectID, obat Obat) (docs Obat, err error) {
+func UpdateObat(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Request) (docs Obat, err error) {
 	cols := db.Collection(col)
+
+	jenisobat := r.FormValue("jenis_obat")
+	namaobat := r.FormValue("nama_obat")
+	deskripsi := r.FormValue("deskripsi")
+	gambar := r.FormValue("file")
+
+	if gambar != "" {
+		imageUrl = gambar
+	} else {
+		imageUrl, err := intermoni.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
+		if err != nil {
+			return docs, fmt.Errorf("error save file: %s", err)
+		}
+		gambar = imageUrl
+	}
 
 	filter := bson.M{"_id": _id}
 
 	update := bson.D{
 		{Key: "$set", Value: bson.D{
-			{Key: "jenis_obat", Value: obat.Jenis_Obat},
-			{Key: "nama_obat", Value: obat.Nama_Obat},
-			{Key: "deskripsi", Value: obat.Deskripsi},
+			{Key: "jenis_obat", Value: jenisobat},
+			{Key: "nama_obat", Value: namaobat},
+			{Key: "deskripsi", Value: deskripsi},
+			{Key: "gambar", Value: gambar},
 		}},
 	}
 
@@ -301,16 +332,28 @@ func GetRSByID(db *mongo.Database, col string, _id primitive.ObjectID) (rs Rumah
 	return rs, nil
 }
 
-func InsertRS(db *mongo.Database, col string, rs RumahSakit) (docs RumahSakit, err error) {
+func InsertRS(db *mongo.Database, col string, r *http.Request) (docs RumahSakit, err error) {
+	namars := r.FormValue("nama_rs")
+	notelp := r.FormValue("no_telp")
+	alamat := r.FormValue("alamat")
+	latitude := r.FormValue("latitude")
+	longitude := r.FormValue("longitude")
+
 	objectID := primitive.NewObjectID()
+
+	imageUrl, err := intermoni.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
+	if err != nil {
+		return docs, fmt.Errorf("error save file: %s", err)
+	}
 
 	datapenyakit := bson.D{
 		{Key: "_id", Value: objectID},
-		{Key: "nama_rs", Value: rs.Nama_RS},
-		{Key: "no_telp", Value: rs.No_Telp},
-		{Key: "alamat", Value: rs.Alamat},
-		{Key: "latitude", Value: rs.Latitude},
-		{Key: "longitude", Value: rs.Longitude},
+		{Key: "nama_rs", Value: namars},
+		{Key: "no_telp", Value: notelp},
+		{Key: "alamat", Value: alamat},
+		{Key: "latitude", Value: latitude},
+		{Key: "longitude", Value: longitude},
+		{Key: "gambar", Value: imageUrl},
 	}
 
 	InsertedID, err := InsertOneDoc(db, col, datapenyakit)
@@ -324,18 +367,36 @@ func InsertRS(db *mongo.Database, col string, rs RumahSakit) (docs RumahSakit, e
 	return docs, nil
 }
 
-func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, rs RumahSakit) (docs RumahSakit, err error) {
+func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Request) (docs RumahSakit, err error) {
 	cols := db.Collection(col)
+
+	namars := r.FormValue("nama_rs")
+	notelp := r.FormValue("no_telp")
+	alamat := r.FormValue("alamat")
+	latitude := r.FormValue("latitude")
+	longitude := r.FormValue("longitude")
+	gambar := r.FormValue("file")
+
+	if gambar != "" {
+		imageUrl = gambar
+	} else {
+		imageUrl, err := intermoni.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
+		if err != nil {
+			return docs, fmt.Errorf("error save file: %s", err)
+		}
+		gambar = imageUrl
+	}
 
 	filter := bson.M{"_id": _id}
 
 	update := bson.D{
 		{Key: "$set", Value: bson.D{
-			{Key: "nama_rs", Value: rs.Nama_RS},
-			{Key: "no_telp", Value: rs.No_Telp},
-			{Key: "alamat", Value: rs.Alamat},
-			{Key: "latitude", Value: rs.Latitude},
-			{Key: "longitude", Value: rs.Longitude},
+			{Key: "nama_rs", Value: namars},
+			{Key: "no_telp", Value: notelp},
+			{Key: "alamat", Value: alamat},
+			{Key: "latitude", Value: latitude},
+			{Key: "longitude", Value: longitude},
+			{Key: "gambar", Value: gambar},
 		}},
 	}
 

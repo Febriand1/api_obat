@@ -35,6 +35,7 @@ type RumahSakit struct {
 	Alamat    string             `bson:"alamat,omitempty" json:"alamat,omitempty"`
 	Latitude  string             `bson:"latitude,omitempty" json:"latitude,omitempty"`
 	Longitude string             `bson:"longitude,omitempty" json:"longitude,omitempty"`
+	Gambar    string             `bson:"gambar,omitempty" json:"gambar,omitempty"`
 }
 
 type Credential struct {

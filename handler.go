@@ -108,7 +108,7 @@ func HandlerInsertObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(response)
 	}
 
-	data, err := InsertObat(mconn, collectionname, obat)
+	data, err := InsertObat(mconn, collectionname, r)
 	if err != nil {
 		response.Message = err.Error()
 		return GCFReturnStruct(response)
@@ -147,7 +147,7 @@ func HandlerUpdateObat(MONGOCONNSTRINGENV, dbname, collectionname string, r *htt
 		return GCFReturnStruct(response)
 	}
 
-	data, err := UpdateObat(mconn, collectionname, ID, obat)
+	data, err := UpdateObat(mconn, collectionname, ID, r)
 	if err != nil {
 		response.Message = err.Error()
 		return GCFReturnStruct(response)
@@ -406,7 +406,7 @@ func HandlerInsertRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.
 		return GCFReturnStruct(response)
 	}
 
-	data, err := InsertRS(mconn, collectionname, rs)
+	data, err := InsertRS(mconn, collectionname, r)
 	if err != nil {
 		response.Message = err.Error()
 		return GCFReturnStruct(response)
@@ -445,7 +445,7 @@ func HandlerUpdateRS(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.
 		return GCFReturnStruct(response)
 	}
 
-	data, err := UpdateRS(mconn, collectionname, ID, rs)
+	data, err := UpdateRS(mconn, collectionname, ID, r)
 	if err != nil {
 		response.Message = err.Error()
 		return GCFReturnStruct(response)
