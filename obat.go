@@ -40,6 +40,7 @@ func Register(db *mongo.Database, col string, userdata User) error {
 	hash, _ := HashPassword(userdata.Password)
 	user := bson.D{
 		{Key: "username", Value: userdata.Username},
+		{Key: "phone_number", Value: userdata.Phone_Number},
 		{Key: "password", Value: hash},
 	}
 
@@ -386,6 +387,9 @@ func InsertRS(db *mongo.Database, col string, r *http.Request) (docs RumahSakit,
 		{Key: "latitude", Value: latitude},
 		{Key: "longitude", Value: longitude},
 		{Key: "gambar", Value: imageUrl},
+		{Key: "obat", Value: bson.D{
+			{Key: "nama_obat", Value: docs.Obat.Nama_Obat},
+		}},
 	}
 
 	InsertedID, err := InsertOneDoc(db, col, datapenyakit)
@@ -429,6 +433,9 @@ func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Re
 			{Key: "latitude", Value: latitude},
 			{Key: "longitude", Value: longitude},
 			{Key: "gambar", Value: gambar},
+			{Key: "obat", Value: bson.D{
+				{Key: "nama_obat", Value: docs.Obat.Nama_Obat},
+			}},
 		}},
 	}
 

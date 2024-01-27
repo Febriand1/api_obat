@@ -325,11 +325,11 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	response.Status = 400
 
-	err := json.NewDecoder(r.Body).Decode(&penyakit)
-	if err != nil {
-		response.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(response)
-	}
+	// err := json.NewDecoder(r.Body).Decode(&penyakit)
+	// if err != nil {
+	// 	response.Message = "error parsing application/json: " + err.Error()
+	// 	return GCFReturnStruct(response)
+	// }
 
 	data, err := InsertPenyakit(mconn, collectionname, penyakit)
 	if err != nil {
@@ -364,11 +364,11 @@ func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 		return GCFReturnStruct(response)
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&penyakit)
-	if err != nil {
-		response.Message = "error parsing application/json: " + err.Error()
-		return GCFReturnStruct(response)
-	}
+	// err = json.NewDecoder(r.Body).Decode(&penyakit)
+	// if err != nil {
+	// 	response.Message = "error parsing application/json: " + err.Error()
+	// 	return GCFReturnStruct(response)
+	// }
 
 	data, err := UpdatePenyakit(mconn, collectionname, ID, penyakit)
 	if err != nil {

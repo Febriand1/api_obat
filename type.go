@@ -7,6 +7,7 @@ import (
 type User struct {
 	ID               primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
 	Username         string             `bson:"username," json:"username,"`
+	Phone_Number     string             `bson:"phone_number," json:"phone_number,"`
 	Password         string             `bson:"password," json:"password,"`
 	Confirm_Password string             `bson:"confirm_password," json:"confirm_password,"`
 }
@@ -36,6 +37,7 @@ type RumahSakit struct {
 	Latitude  string             `bson:"latitude,omitempty" json:"latitude,omitempty"`
 	Longitude string             `bson:"longitude,omitempty" json:"longitude,omitempty"`
 	Gambar    string             `bson:"gambar,omitempty" json:"gambar,omitempty"`
+	Obat      Obat               `bson:"obat,omitempty" json:"obat,omitempty"`
 }
 
 type Credential struct {
