@@ -11,8 +11,8 @@ var mconn = MongoConnect("MONGOSTRING", "psikofarmaka")
 
 func TestRegister(t *testing.T) {
 	var data User
-	data.Username = "fhulan"
-	data.Password = "secret"
+	data.Username = "admin"
+	data.Password = "admin"
 
 	err := Register(mconn, "user", data)
 	if err != nil {

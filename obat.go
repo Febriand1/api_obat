@@ -71,6 +71,39 @@ func Login(db *mongo.Database, col string, userdata User) (user User, status boo
 	return user, true, nil
 }
 
+func GetAllUser(db *mongo.Database, col string) (user []User, err error) {
+	cols := db.Collection(col)
+
+	cursor, err := cols.Find(context.Background(), bson.M{})
+	if err != nil {
+		return user, err
+	}
+
+	err = cursor.All(context.Background(), &user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func GetUserByID(db *mongo.Database, col string, _id primitive.ObjectID) (user User, err error) {
+	cols := db.Collection(col)
+
+	filter := bson.M{"_id": _id}
+
+	err = cols.FindOne(context.Background(), filter).Decode(&obat)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			fmt.Println("data tidak di temukan dengan ID: ", _id)
+		} else {
+			fmt.Println("error retrieving data for ID", _id, ":", err.Error())
+		}
+	}
+
+	return user, nil
+}
+
 // obat
 func GetAllObat(db *mongo.Database, col string) (obat []Obat, err error) {
 	cols := db.Collection(col)

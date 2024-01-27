@@ -22,6 +22,28 @@ func GCFReturnStruct(DataStuct any) string {
 	return string(jsondata)
 }
 
+// user
+func HandlerRegister(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+	credential.Status = 400
+
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		credential.Message = "error parsing application/json: " + err.Error()
+	}
+
+	err = Register(mconn, collectionname, user)
+	if err != nil {
+		credential.Message = err.Error()
+		return GCFReturnStruct(credential)
+	}
+
+	credential.Status = 200
+	credential.Message = "Registrasi Berhasil"
+
+	return GCFReturnStruct(credential)
+}
+
 func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
 	credential.Status = 400
@@ -41,6 +63,58 @@ func HandlerLogin(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Req
 	credential.Message = "Selamat Datang " + users.Username
 
 	return GCFReturnStruct(credential)
+}
+
+func HandlerGetAllUser(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+
+	data, err := GetAllUser(mconn, collectionname)
+	if err != nil {
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	response.Status = 200
+	response.Message = "Get All User Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
+
+	return GCFReturnStruct(responData)
+}
+
+func HandlerGetUserByID(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := MongoConnect(MONGOCONNSTRINGENV, dbname)
+
+	id := r.URL.Query().Get("_id")
+	if id == "" {
+		response.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		response.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(response)
+	}
+
+	data, err := GetUserByID(mconn, collectionname, ID)
+	if err != nil {
+		response.Message = err.Error()
+		return GCFReturnStruct(response)
+	}
+
+	response.Status = 200
+	response.Message = "Get User By ID Success"
+	responData := bson.M{
+		"status":  response.Status,
+		"message": response.Message,
+		"data":    data,
+	}
+
+	return GCFReturnStruct(responData)
 }
 
 // obat
