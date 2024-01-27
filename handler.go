@@ -331,7 +331,7 @@ func HandlerInsertPenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	// 	return GCFReturnStruct(response)
 	// }
 
-	data, err := InsertPenyakit(mconn, collectionname, penyakit)
+	data, err := InsertPenyakit(mconn, collectionname, r)
 	if err != nil {
 		response.Message = err.Error()
 		return GCFReturnStruct(response)
@@ -370,7 +370,7 @@ func HandlerUpdatePenyakit(MONGOCONNSTRINGENV, dbname, collectionname string, r 
 	// 	return GCFReturnStruct(response)
 	// }
 
-	data, err := UpdatePenyakit(mconn, collectionname, ID, penyakit)
+	data, err := UpdatePenyakit(mconn, collectionname, ID, r)
 	if err != nil {
 		response.Message = err.Error()
 		return GCFReturnStruct(response)

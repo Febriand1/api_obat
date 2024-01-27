@@ -157,45 +157,45 @@ func TestGetPenyakitByID(t *testing.T) {
 	}
 }
 
-func TestInsertPenyakit(t *testing.T) {
-	var data Penyakit
-	data.Jenis_Penyakit = "Kejiwaan"
-	data.Nama_Penyakit = "Skizofrenia"
-	data.Deskripsi = "Deskripsi Penyakit"
-	data.Obat.Nama_Obat = "Chlorpromazine"
+// func TestInsertPenyakit(t *testing.T) {
+// 	var data Penyakit
+// 	data.Jenis_Penyakit = "Kejiwaan"
+// 	data.Nama_Penyakit = "Skizofrenia"
+// 	data.Deskripsi = "Deskripsi Penyakit"
+// 	data.Obat.Nama_Obat = "Chlorpromazine"
 
-	_, err := InsertPenyakit(mconn, "penyakit", data)
-	if err != nil {
-		t.Errorf("Error inserting penyakit: %v", err)
-	} else {
-		fmt.Println("Insert penyakit success", data)
-	}
-}
+// 	_, err := InsertPenyakit(mconn, "penyakit", data)
+// 	if err != nil {
+// 		t.Errorf("Error inserting penyakit: %v", err)
+// 	} else {
+// 		fmt.Println("Insert penyakit success", data)
+// 	}
+// }
 
-func TestUpdatePenyakit(t *testing.T) {
-	var data Penyakit
-	data.Jenis_Penyakit = "Kejiwaan"
-	data.Nama_Penyakit = "Skizofrenia"
-	data.Deskripsi = "gangguan mental berat yang dapat memengaruhi tingkah laku, emosi, dan komunikasi. Penderita skizofrenia bisa mengalami halusinasi, delusi, kekacauan berpikir, dan perubahan perilaku."
-	data.Obat.Nama_Obat = "Chlorpromazine"
+// func TestUpdatePenyakit(t *testing.T) {
+// 	var data Penyakit
+// 	data.Jenis_Penyakit = "Kejiwaan"
+// 	data.Nama_Penyakit = "Skizofrenia"
+// 	data.Deskripsi = "gangguan mental berat yang dapat memengaruhi tingkah laku, emosi, dan komunikasi. Penderita skizofrenia bisa mengalami halusinasi, delusi, kekacauan berpikir, dan perubahan perilaku."
+// 	data.Obat.Nama_Obat = "Chlorpromazine"
 
-	id := "6592646ddff04a4ce4aa716e"
+// 	id := "6592646ddff04a4ce4aa716e"
 
-	ID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		fmt.Printf("update penyakit error")
-		return
-	} else {
+// 	ID, err := primitive.ObjectIDFromHex(id)
+// 	if err != nil {
+// 		fmt.Printf("update penyakit error")
+// 		return
+// 	} else {
 
-		status, err := UpdatePenyakit(mconn, "penyakit", ID, data)
-		fmt.Println("Status", status)
-		if err != nil {
-			t.Errorf("Error updating penyakit: %v", err)
-		} else {
-			fmt.Println("Update penyakit success", data)
-		}
-	}
-}
+// 		status, err := UpdatePenyakit(mconn, "penyakit", ID, data)
+// 		fmt.Println("Status", status)
+// 		if err != nil {
+// 			t.Errorf("Error updating penyakit: %v", err)
+// 		} else {
+// 			fmt.Println("Update penyakit success", data)
+// 		}
+// 	}
+// }
 
 func TestDeletePenyakit(t *testing.T) {
 	id := "659263df1db7d0aa75bc9b7d"

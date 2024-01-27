@@ -262,16 +262,21 @@ func GetPenyakitByID(db *mongo.Database, col string, _id primitive.ObjectID) (pe
 	return penyakit, nil
 }
 
-func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (docs Penyakit, err error) {
+func InsertPenyakit(db *mongo.Database, col string, r *http.Request) (docs Penyakit, err error) {
+	jenispenyakit := r.FormValue("jenis_penyakit")
+	namapenyakit := r.FormValue("nama_penyakit")
+	deskripsi := r.FormValue("deskripsi")
+	namaobat := r.FormValue("nama_obat")
+
 	objectID := primitive.NewObjectID()
 
 	datapenyakit := bson.D{
 		{Key: "_id", Value: objectID},
-		{Key: "jenis_penyakit", Value: penyakit.Jenis_Penyakit},
-		{Key: "nama_penyakit", Value: penyakit.Nama_Penyakit},
-		{Key: "deskripsi", Value: penyakit.Deskripsi},
+		{Key: "jenis_penyakit", Value: jenispenyakit},
+		{Key: "nama_penyakit", Value: namapenyakit},
+		{Key: "deskripsi", Value: deskripsi},
 		{Key: "obat", Value: bson.D{
-			{Key: "nama_obat", Value: penyakit.Obat.Nama_Obat},
+			{Key: "nama_obat", Value: namaobat},
 		}},
 	}
 
@@ -286,18 +291,23 @@ func InsertPenyakit(db *mongo.Database, col string, penyakit Penyakit) (docs Pen
 	return docs, nil
 }
 
-func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, penyakit Penyakit) (docs Penyakit, err error) {
+func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Request) (docs Penyakit, err error) {
 	cols := db.Collection(col)
+
+	jenispenyakit := r.FormValue("jenis_penyakit")
+	namapenyakit := r.FormValue("nama_penyakit")
+	deskripsi := r.FormValue("deskripsi")
+	namaobat := r.FormValue("nama_obat")
 
 	filter := bson.M{"_id": _id}
 
 	update := bson.D{
 		{Key: "$set", Value: bson.D{
-			{Key: "jenis_penyakit", Value: penyakit.Jenis_Penyakit},
-			{Key: "nama_penyakit", Value: penyakit.Nama_Penyakit},
-			{Key: "deskripsi", Value: penyakit.Deskripsi},
+			{Key: "jenis_penyakit", Value: jenispenyakit},
+			{Key: "nama_penyakit", Value: namapenyakit},
+			{Key: "deskripsi", Value: deskripsi},
 			{Key: "obat", Value: bson.D{
-				{Key: "nama_obat", Value: penyakit.Obat.Nama_Obat},
+				{Key: "nama_obat", Value: namaobat},
 			}},
 		}},
 	}
@@ -371,6 +381,7 @@ func InsertRS(db *mongo.Database, col string, r *http.Request) (docs RumahSakit,
 	alamat := r.FormValue("alamat")
 	latitude := r.FormValue("latitude")
 	longitude := r.FormValue("longitude")
+	namaobat := r.FormValue("nama_obat")
 
 	objectID := primitive.NewObjectID()
 
@@ -388,7 +399,7 @@ func InsertRS(db *mongo.Database, col string, r *http.Request) (docs RumahSakit,
 		{Key: "longitude", Value: longitude},
 		{Key: "gambar", Value: imageUrl},
 		{Key: "obat", Value: bson.D{
-			{Key: "nama_obat", Value: docs.Obat.Nama_Obat},
+			{Key: "nama_obat", Value: namaobat},
 		}},
 	}
 
@@ -412,6 +423,7 @@ func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Re
 	latitude := r.FormValue("latitude")
 	longitude := r.FormValue("longitude")
 	gambar := r.FormValue("file")
+	namaobat := r.FormValue("nama_obat")
 
 	if gambar != "" {
 		imageUrl = gambar
@@ -434,7 +446,7 @@ func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Re
 			{Key: "longitude", Value: longitude},
 			{Key: "gambar", Value: gambar},
 			{Key: "obat", Value: bson.D{
-				{Key: "nama_obat", Value: docs.Obat.Nama_Obat},
+				{Key: "nama_obat", Value: namaobat},
 			}},
 		}},
 	}
