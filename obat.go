@@ -266,17 +266,21 @@ func InsertPenyakit(db *mongo.Database, col string, r *http.Request) (docs Penya
 	jenispenyakit := r.FormValue("jenis_penyakit")
 	namapenyakit := r.FormValue("nama_penyakit")
 	deskripsi := r.FormValue("deskripsi")
+	namaobat := r.FormValue("nama_obat")
+
+	obat := Obat{
+		Nama_Obat: namaobat,
+	}
 
 	objectID := primitive.NewObjectID()
 
-	var penyakit Penyakit
 	datapenyakit := bson.D{
 		{Key: "_id", Value: objectID},
 		{Key: "jenis_penyakit", Value: jenispenyakit},
 		{Key: "nama_penyakit", Value: namapenyakit},
 		{Key: "deskripsi", Value: deskripsi},
 		{Key: "obat", Value: bson.D{
-			{Key: "nama_obat", Value: penyakit.Obat.Nama_Obat},
+			{Key: "nama_obat", Value: obat},
 		}},
 	}
 
@@ -297,8 +301,12 @@ func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, r *h
 	jenispenyakit := r.FormValue("jenis_penyakit")
 	namapenyakit := r.FormValue("nama_penyakit")
 	deskripsi := r.FormValue("deskripsi")
+	namaobat := r.FormValue("nama_obat")
 
-	var penyakit Penyakit
+	obat := Obat{
+		Nama_Obat: namaobat,
+	}
+
 	filter := bson.M{"_id": _id}
 
 	update := bson.D{
@@ -307,7 +315,7 @@ func UpdatePenyakit(db *mongo.Database, col string, _id primitive.ObjectID, r *h
 			{Key: "nama_penyakit", Value: namapenyakit},
 			{Key: "deskripsi", Value: deskripsi},
 			{Key: "obat", Value: bson.D{
-				{Key: "nama_obat", Value: penyakit.Obat.Nama_Obat},
+				{Key: "nama_obat", Value: obat},
 			}},
 		}},
 	}
@@ -381,8 +389,12 @@ func InsertRS(db *mongo.Database, col string, r *http.Request) (docs RumahSakit,
 	alamat := r.FormValue("alamat")
 	latitude := r.FormValue("latitude")
 	longitude := r.FormValue("longitude")
+	namaobat := r.FormValue("nama_obat")
 
-	var penyakit Penyakit
+	obat := Obat{
+		Nama_Obat: namaobat,
+	}
+
 	objectID := primitive.NewObjectID()
 
 	imageUrl, err := image.SaveFileToGithub("Febriand1", "fax.mp4@gmail.com", "Image", "pemrog", r)
@@ -399,7 +411,7 @@ func InsertRS(db *mongo.Database, col string, r *http.Request) (docs RumahSakit,
 		{Key: "longitude", Value: longitude},
 		{Key: "gambar", Value: imageUrl},
 		{Key: "obat", Value: bson.D{
-			{Key: "nama_obat", Value: penyakit.Obat.Nama_Obat},
+			{Key: "nama_obat", Value: obat},
 		}},
 	}
 
@@ -423,6 +435,11 @@ func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Re
 	latitude := r.FormValue("latitude")
 	longitude := r.FormValue("longitude")
 	gambar := r.FormValue("file")
+	namaobat := r.FormValue("nama_obat")
+
+	obat := Obat{
+		Nama_Obat: namaobat,
+	}
 
 	if gambar != "" {
 		imageUrl = gambar
@@ -434,7 +451,6 @@ func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Re
 		gambar = imageUrl
 	}
 
-	var penyakit Penyakit
 	filter := bson.M{"_id": _id}
 
 	update := bson.D{
@@ -446,7 +462,7 @@ func UpdateRS(db *mongo.Database, col string, _id primitive.ObjectID, r *http.Re
 			{Key: "longitude", Value: longitude},
 			{Key: "gambar", Value: gambar},
 			{Key: "obat", Value: bson.D{
-				{Key: "nama_obat", Value: penyakit.Obat.Nama_Obat},
+				{Key: "nama_obat", Value: obat},
 			}},
 		}},
 	}
